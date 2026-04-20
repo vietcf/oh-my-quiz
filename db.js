@@ -224,7 +224,7 @@ const statements = {
       ) AS answers_json
     FROM questions q
     WHERE q.exam_id = ?
-    ORDER BY q.created_at DESC, q.id DESC
+    ORDER BY q.id ASC
   `),
   createQuestion: db.prepare(`INSERT INTO questions (exam_id, content, question_type) VALUES (?, ?, ?)`),
   createAnswer: db.prepare(`INSERT INTO answers (question_id, content, is_correct) VALUES (?, ?, ?)`),
