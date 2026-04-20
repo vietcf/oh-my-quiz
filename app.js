@@ -68,17 +68,25 @@ function escapeHtml(value) {
     .replaceAll("'", '&#39;');
 }
 
+function tryPrettyJsonContent(value) {
+  const text = String(value ?? '');
+  const trimmed = text.trim();
+  if (!trimmed) return null;
+  if (!trimmed.startsWith('{') && !trimmed.startsWith('[')) return null;
+
+  try {
+    return JSON.stringify(JSON.parse(trimmed), null, 2);
+  } catch {
+    return null;
+  }
+}
+
 function prettyContent(value) {
   const text = String(value ?? '');
   const trimmed = text.trim();
   if (!trimmed) return '';
 
-  try {
-    const parsed = JSON.parse(trimmed);
-    return JSON.stringify(parsed, null, 2);
-  } catch {
-    return text;
-  }
+  return tryPrettyJsonContent(text) || text;
 }
 
 function isSafeImageSrc(src) {
@@ -87,8 +95,14 @@ function isSafeImageSrc(src) {
 }
 
 function renderRichContent(value) {
-  const text = prettyContent(value);
-  if (!text) return '';
+  const text = String(value ?? '');
+  const trimmed = text.trim();
+  if (!trimmed) return '';
+
+  const prettyJson = tryPrettyJsonContent(text);
+  if (prettyJson) {
+    return `<div class="rich-content"><pre class="code-block">${escapeHtml(prettyJson)}</pre></div>`;
+  }
 
   const parts = [];
   const imagePattern = /!\[([^\]]*)\]\(([^)]+)\)/g;

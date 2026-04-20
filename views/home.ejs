@@ -21,16 +21,16 @@
           </div>
           <span class="pill"><%= exam.question_count %> câu</span>
         </div>
-        <div class="actions">
+        <div class="actions home-exam-actions">
           <% if (isAdmin) { %>
-            <a class="btn" href="/exams/<%= exam.id %>">Quản lý câu hỏi</a>
-            <a class="btn secondary" href="/practice/new">Thi thử</a>
+            <a class="btn home-exam-actions__control" href="/exams/<%= exam.id %>">Quản lý câu hỏi</a>
+            <a class="btn secondary home-exam-actions__control" href="/practice/new">Thi thử</a>
           <% } else { %>
-            <a class="btn" href="/practice/new">Thi thử</a>
+            <a class="btn home-exam-actions__control" href="/practice/new">Thi thử</a>
           <% } %>
           <% if (isAdmin) { %>
             <form method="POST" action="/exams/<%= exam.id %>/delete" data-confirm-delete="Xóa bài thi này sẽ xóa toàn bộ câu hỏi, bài làm và kết quả liên quan. Bạn chắc chắn chứ?">
-              <button class="btn danger" type="submit">Xóa bài thi</button>
+              <button class="btn danger home-exam-actions__control home-exam-actions__control--danger" type="submit">Xóa bài thi</button>
             </form>
           <% } %>
         </div>

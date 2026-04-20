@@ -5,12 +5,12 @@
       <h1><%= exam.name %></h1>
       <p><%= exam.description || '' %></p>
     </div>
-    <div class="actions">
-      <a class="btn secondary" href="/">Trang ch&#7911;</a>
-      <a class="btn" href="/practice/new">Thi th&#7917;</a>
+    <div class="actions exam-detail-top-actions">
+      <a class="btn secondary exam-detail-top-actions__control exam-detail-top-actions__control--home" href="/">Trang ch&#7911;</a>
+      <a class="btn exam-detail-top-actions__control exam-detail-top-actions__control--practice" href="/practice/new">Thi th&#7917;</a>
       <% if (isAdmin) { %>
         <form method="POST" action="/exams/<%= exam.id %>/delete" data-confirm-delete="X&#243;a b&#224;i thi n&#224;y s&#7869; x&#243;a to&#224;n b&#7897; c&#226;u h&#7887;i, b&#224;i l&#224;m v&#224; k&#7871;t qu&#7843; li&#234;n quan. B&#7841;n ch&#7855;c ch&#7855;n ch&#7913;?">
-          <button class="btn danger" type="submit">X&#243;a b&#224;i thi</button>
+          <button class="btn danger exam-detail-top-actions__control exam-detail-top-actions__control--danger" type="submit">X&#243;a b&#224;i thi</button>
         </form>
       <% } %>
     </div>
@@ -85,7 +85,7 @@
               </div>
               <div class="code-wrap"><%- question.contentBlock %></div>
               <div class="actions">
-                <a class="btn secondary" href="/exams/<%= exam.id %>/questions/<%= question.id %>/edit?page=<%= pagination.currentPage %>">S&#7917;a c&#226;u h&#7887;i</a>
+                <a class="btn edit" href="/exams/<%= exam.id %>/questions/<%= question.id %>/edit?page=<%= pagination.currentPage %>">S&#7917;a c&#226;u h&#7887;i</a>
                 <form method="POST" action="/exams/<%= exam.id %>/questions/<%= question.id %>/delete" data-confirm-delete="X&#243;a c&#226;u h&#7887;i n&#224;y s&#7869; x&#243;a lu&#244;n c&#225;c &#273;&#225;p &#225;n v&#224; d&#7919; li&#7879;u l&#224;m b&#224;i li&#234;n quan. B&#7841;n ch&#7855;c ch&#7855;n ch&#7913;?">
                   <input type="hidden" name="page" value="<%= pagination.currentPage %>" />
                   <button class="btn danger" type="submit">X&#243;a c&#226;u h&#7887;i</button>

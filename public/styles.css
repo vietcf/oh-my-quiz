@@ -130,24 +130,68 @@ a { color: inherit; text-decoration: none; }
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  border: 0;
-  border-radius: 999px;
+  border: 1px solid rgba(56, 189, 248, 0.28);
+  border-radius: 16px;
   padding: 10px 16px;
-  background: linear-gradient(135deg, var(--accent), #60a5fa);
-  color: #04111f;
+  min-height: 44px;
+  background: linear-gradient(135deg, rgba(56, 189, 248, 0.18), rgba(96, 165, 250, 0.1)), linear-gradient(180deg, rgba(15, 23, 42, 0.94), rgba(8, 17, 31, 0.9));
+  color: #e0f2fe;
   font-weight: 700;
   cursor: pointer;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05), 0 14px 28px rgba(2, 6, 23, 0.22);
+  transition: transform 0.18s ease, border-color 0.18s ease, background 0.18s ease, box-shadow 0.18s ease, color 0.18s ease;
 }
 
-.btn.secondary {
+.btn:hover {
+  transform: translateY(-1px);
+  border-color: rgba(56, 189, 248, 0.38);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06), 0 16px 30px rgba(2, 6, 23, 0.28);
+}
+
+.btn:focus-visible {
+  outline: none;
+  transform: translateY(-1px);
+  border-color: rgba(56, 189, 248, 0.48);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06), 0 0 0 3px rgba(56, 189, 248, 0.16), 0 16px 30px rgba(2, 6, 23, 0.28);
+}
+
+.btn.secondary,
+.btn.info {
   background: rgba(148, 163, 184, 0.14);
+  border-color: rgba(148, 163, 184, 0.26);
   color: var(--text);
-  border: 1px solid var(--border);
+}
+
+.btn.secondary:hover,
+.btn.info:hover {
+  border-color: rgba(148, 163, 184, 0.4);
+}
+
+.btn.secondary:focus-visible,
+.btn.info:focus-visible {
+  border-color: rgba(148, 163, 184, 0.46);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06), 0 0 0 3px rgba(148, 163, 184, 0.14), 0 16px 30px rgba(2, 6, 23, 0.28);
+}
+
+.btn.edit {
+  border-color: rgba(56, 189, 248, 0.28);
+  color: #e0f2fe;
 }
 
 .btn.danger {
-  background: linear-gradient(135deg, #fb7185, #f43f5e);
-  color: #fff1f2;
+  border-color: rgba(251, 113, 133, 0.3);
+  background: linear-gradient(135deg, rgba(251, 113, 133, 0.14), rgba(244, 63, 94, 0.08)), linear-gradient(180deg, rgba(15, 23, 42, 0.94), rgba(8, 17, 31, 0.9));
+  color: #ffe4e6;
+}
+
+.btn.danger:hover {
+  border-color: rgba(251, 113, 133, 0.42);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06), 0 16px 30px rgba(76, 5, 25, 0.24);
+}
+
+.btn.danger:focus-visible {
+  border-color: rgba(251, 113, 133, 0.48);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06), 0 0 0 3px rgba(251, 113, 133, 0.12), 0 16px 30px rgba(76, 5, 25, 0.24);
 }
 
 .pill {
@@ -238,6 +282,40 @@ a { color: inherit; text-decoration: none; }
   background: linear-gradient(135deg, var(--accent), #60a5fa);
   color: #04111f;
   border-color: transparent;
+}
+
+.home-exam-actions {
+  align-items: stretch;
+  gap: 12px;
+}
+
+.home-exam-actions > .btn,
+.home-exam-actions > form {
+  flex: 1 1 152px;
+  min-width: 0;
+}
+
+.home-exam-actions > .btn,
+.home-exam-actions > form .btn {
+  width: 100%;
+  min-height: 48px;
+}
+
+.exam-detail-top-actions {
+  align-items: stretch;
+  gap: 12px;
+}
+
+.exam-detail-top-actions > .btn,
+.exam-detail-top-actions > form {
+  flex: 1 1 152px;
+  min-width: 0;
+}
+
+.exam-detail-top-actions > .btn,
+.exam-detail-top-actions > form .btn {
+  width: 100%;
+  min-height: 48px;
 }
 
 .user-card {
@@ -403,6 +481,30 @@ a { color: inherit; text-decoration: none; }
   align-items: center;
 }
 
+.panel[data-question-panel="list"] .question > .actions {
+  margin-top: 14px;
+  margin-bottom: 18px;
+}
+
+.panel[data-question-panel="list"] .question > .actions > .btn,
+.panel[data-question-panel="list"] .question > .actions > form {
+  flex: 1 1 160px;
+}
+
+.panel[data-question-panel="list"] .question > .actions > .btn,
+.panel[data-question-panel="list"] .question > .actions > form .btn {
+  width: 100%;
+  min-height: 48px;
+}
+
+.panel[data-question-panel="list"] .question > .actions > form .btn {
+  width: 100%;
+}
+
+.panel[data-question-panel="list"] .question > .answer-list {
+  margin-top: 0;
+}
+
 .code-wrap {
   margin-top: 12px;
 }
@@ -445,7 +547,12 @@ a { color: inherit; text-decoration: none; }
   min-width: 24px;
   color: #93c5fd;
   font-weight: 700;
-  margin-top: 4px;
+  margin-top: 0;
+  line-height: 1.5;
+}
+
+.answer-list li .code-wrap {
+  margin-top: 0;
 }
 
 .choice {
