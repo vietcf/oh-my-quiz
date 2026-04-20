@@ -18,8 +18,21 @@
 </section>
 
 <% if (isAdmin) { %>
+  <section class="panel admin-question-toolbar" data-exam-detail-root>
+    <div class="admin-question-toolbar-head">
+      <div>
+        <p class="eyebrow">Quản lý câu hỏi</p>
+        <h2>Điều khiển hiển thị</h2>
+      </div>
+      <div class="actions admin-question-toolbar-actions">
+        <button class="btn secondary" type="button" data-question-panel-toggle="list">Danh sách câu hỏi</button>
+        <button class="btn" type="button" data-question-panel-toggle="form">Thêm câu hỏi</button>
+      </div>
+    </div>
+  </section>
+
   <section class="split">
-    <div class="panel">
+    <div class="panel is-hidden" data-question-panel="form">
       <h2>Nhập câu hỏi</h2>
       <form method="POST" action="/exams/<%= exam.id %>/questions" class="form" data-question-form data-image-upload-root>
         <label>
@@ -56,7 +69,7 @@
       </form>
     </div>
 
-    <div class="panel">
+    <div class="panel" data-question-panel="list">
       <h2>Danh sách câu hỏi</h2>
       <div class="stack">
         <% if (questions.length) { %>

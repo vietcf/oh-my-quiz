@@ -1,4 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
+  setupExamDetailPage();
   setupQuestionEditor();
   setupImageUploaders();
   setupDeleteConfirmations();
@@ -9,6 +10,61 @@ document.addEventListener('DOMContentLoaded', () => {
 function autoGrowField(field) {
   field.style.height = 'auto';
   field.style.height = field.scrollHeight + 'px';
+}
+
+function refreshAutoGrowFields(root = document) {
+  root.querySelectorAll('[data-auto-grow]').forEach((field) => {
+    autoGrowField(field);
+  });
+}
+
+function setupExamDetailPage() {
+  const root = document.querySelector('[data-exam-detail-root]');
+  if (!root) return;
+
+  const panels = {
+    list: document.querySelector('[data-question-panel="list"]'),
+    form: document.querySelector('[data-question-panel="form"]'),
+  };
+  const buttons = root.querySelectorAll('[data-question-panel-toggle]');
+
+  if (!panels.list || !panels.form || !buttons.length) return;
+
+  const setActivePanel = (mode) => {
+    const safeMode = mode === 'form' ? 'form' : 'list';
+    panels.list.classList.toggle('is-hidden', safeMode !== 'list');
+    panels.form.classList.toggle('is-hidden', safeMode !== 'form');
+
+    buttons.forEach((button) => {
+      const isActive = button.dataset.questionPanelToggle === safeMode;
+      button.classList.toggle('is-active', isActive);
+      button.classList.toggle('secondary', !isActive);
+    });
+
+    if (safeMode === 'form') {
+      window.requestAnimationFrame(() => {
+        refreshAutoGrowFields(panels.form);
+        const primaryField = panels.form.querySelector('[data-image-target]');
+        if (primaryField) {
+          primaryField.focus();
+        }
+      });
+    }
+  };
+
+  buttons.forEach((button) => {
+    button.addEventListener('click', () => {
+      const mode = button.dataset.questionPanelToggle || 'list';
+      setActivePanel(mode);
+
+      const panel = panels[mode];
+      if (panel) {
+        panel.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    });
+  });
+
+  setActivePanel('list');
 }
 
 function setupQuestionEditor() {
