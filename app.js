@@ -314,6 +314,11 @@ function parseSelectedIds(value) {
   return [];
 }
 
+function parsePositivePage(value) {
+  const page = Number.parseInt(String(value || '1'), 10);
+  return Number.isInteger(page) && page > 0 ? page : 1;
+}
+
 function normalizeSelectedAnswerIdsForQuestion(question, selectedIds) {
   if (!question) return [];
   const validAnswerIds = new Set((question.answers || []).map((answer) => Number(answer.id)));
@@ -598,10 +603,31 @@ app.get('/exams/:id', async (req, res) => {
   const exam = getExam(Number(req.params.id));
   if (!exam) return sendNotFound(res);
 
+  const allQuestions = listQuestionsForExam(exam.id).map(decorateQuestion);
+  const pageSize = 10;
+  const totalQuestions = allQuestions.length;
+  const totalPages = Math.max(1, Math.ceil(totalQuestions / pageSize));
+  const requestedPage = parsePositivePage(req.query.page);
+  const currentPage = Math.min(requestedPage, totalPages);
+  const startIndex = (currentPage - 1) * pageSize;
+  const paginatedQuestions = allQuestions.slice(startIndex, startIndex + pageSize);
+
   await render(res, 'exam-detail.ejs', {
     title: exam.name,
     exam,
-    questions: listQuestionsForExam(exam.id).map(decorateQuestion),
+    questions: paginatedQuestions,
+    pagination: {
+      currentPage,
+      pageSize,
+      totalPages,
+      totalQuestions,
+      startIndex,
+      endIndex: Math.min(startIndex + paginatedQuestions.length, totalQuestions),
+      hasPrev: currentPage > 1,
+      hasNext: currentPage < totalPages,
+      prevPage: currentPage > 1 ? currentPage - 1 : 1,
+      nextPage: currentPage < totalPages ? currentPage + 1 : totalPages,
+    },
   });
 });
 
@@ -616,12 +642,15 @@ app.get('/exams/:examId/questions/:questionId/edit', requireAdmin, async (req, r
     title: `Sửa câu hỏi - ${exam.name}`,
     exam,
     question: decorateQuestion(question),
+    currentPage: parsePositivePage(req.query.page),
   });
 });
 
 app.post('/exams/:id/questions', requireAdmin, async (req, res) => {
   const exam = getExam(Number(req.params.id));
   if (!exam) return sendNotFound(res);
+  const currentPage = parsePositivePage(req.body.page);
+  const examPageUrl = `/exams/${exam.id}?page=${currentPage}`;
 
   const content = String(req.body.content || '').trim();
   const questionType = req.body.question_type === 'multi' ? 'multi' : 'single';
@@ -631,7 +660,7 @@ app.post('/exams/:id/questions', requireAdmin, async (req, res) => {
     return render(res, 'message.ejs', {
       title: 'Thiếu dữ liệu',
       message: 'Thiếu nội dung câu hỏi.',
-      backUrl: `/exams/${exam.id}`,
+      backUrl: examPageUrl,
     });
   }
 
@@ -639,7 +668,7 @@ app.post('/exams/:id/questions', requireAdmin, async (req, res) => {
     return render(res, 'message.ejs', {
       title: 'Thiếu đáp án',
       message: 'Cần ít nhất 2 đáp án.',
-      backUrl: `/exams/${exam.id}`,
+      backUrl: examPageUrl,
     });
   }
 
@@ -647,7 +676,7 @@ app.post('/exams/:id/questions', requireAdmin, async (req, res) => {
     return render(res, 'message.ejs', {
       title: 'Đáp án trùng nhau',
       message: 'Các câu trả lời trong cùng một câu hỏi phải khác nhau.',
-      backUrl: `/exams/${exam.id}`,
+      backUrl: examPageUrl,
     });
   }
 
@@ -656,7 +685,7 @@ app.post('/exams/:id/questions', requireAdmin, async (req, res) => {
     return render(res, 'message.ejs', {
       title: 'Lỗi đáp án đúng',
       message: 'Câu hỏi one choice phải có đúng 1 đáp án đúng.',
-      backUrl: `/exams/${exam.id}`,
+      backUrl: examPageUrl,
     });
   }
 
@@ -664,12 +693,12 @@ app.post('/exams/:id/questions', requireAdmin, async (req, res) => {
     return render(res, 'message.ejs', {
       title: 'Lỗi đáp án đúng',
       message: 'Câu hỏi multi choice phải có ít nhất 2 đáp án đúng.',
-      backUrl: `/exams/${exam.id}`,
+      backUrl: examPageUrl,
     });
   }
 
   createQuestion(exam.id, content, questionType, answers);
-  return redirect(res, `/exams/${exam.id}`);
+  return redirect(res, examPageUrl);
 });
 
 app.post('/exams/:examId/questions/:questionId', requireAdmin, async (req, res) => {
@@ -678,6 +707,9 @@ app.post('/exams/:examId/questions/:questionId', requireAdmin, async (req, res) 
   if (!exam || !question || Number(question.exam_id) !== Number(exam.id)) {
     return sendNotFound(res);
   }
+  const currentPage = parsePositivePage(req.body.page);
+  const examPageUrl = `/exams/${exam.id}?page=${currentPage}`;
+  const editPageUrl = `/exams/${exam.id}/questions/${question.id}/edit?page=${currentPage}`;
 
   const content = String(req.body.content || '').trim();
   const questionType = req.body.question_type === 'multi' ? 'multi' : 'single';
@@ -687,7 +719,7 @@ app.post('/exams/:examId/questions/:questionId', requireAdmin, async (req, res) 
     return render(res, 'message.ejs', {
       title: 'Thiếu dữ liệu',
       message: 'Thiếu nội dung câu hỏi.',
-      backUrl: `/exams/${exam.id}/questions/${question.id}/edit`,
+      backUrl: editPageUrl,
     });
   }
 
@@ -695,7 +727,7 @@ app.post('/exams/:examId/questions/:questionId', requireAdmin, async (req, res) 
     return render(res, 'message.ejs', {
       title: 'Thiếu đáp án',
       message: 'Cần ít nhất 2 đáp án.',
-      backUrl: `/exams/${exam.id}/questions/${question.id}/edit`,
+      backUrl: editPageUrl,
     });
   }
 
@@ -703,7 +735,7 @@ app.post('/exams/:examId/questions/:questionId', requireAdmin, async (req, res) 
     return render(res, 'message.ejs', {
       title: 'Đáp án trùng nhau',
       message: 'Các câu trả lời trong cùng một câu hỏi phải khác nhau.',
-      backUrl: `/exams/${exam.id}/questions/${question.id}/edit`,
+      backUrl: editPageUrl,
     });
   }
 
@@ -712,7 +744,7 @@ app.post('/exams/:examId/questions/:questionId', requireAdmin, async (req, res) 
     return render(res, 'message.ejs', {
       title: 'Lỗi đáp án đúng',
       message: 'Câu hỏi one choice phải có đúng 1 đáp án đúng.',
-      backUrl: `/exams/${exam.id}/questions/${question.id}/edit`,
+      backUrl: editPageUrl,
     });
   }
 
@@ -720,12 +752,12 @@ app.post('/exams/:examId/questions/:questionId', requireAdmin, async (req, res) 
     return render(res, 'message.ejs', {
       title: 'Lỗi đáp án đúng',
       message: 'Câu hỏi multi choice phải có ít nhất 2 đáp án đúng.',
-      backUrl: `/exams/${exam.id}/questions/${question.id}/edit`,
+      backUrl: editPageUrl,
     });
   }
 
   updateQuestion(question.id, exam.id, content, questionType, answers);
-  return redirect(res, `/exams/${exam.id}`);
+  return redirect(res, examPageUrl);
 });
 
 app.post('/exams/:examId/questions/:questionId/delete', requireAdmin, async (req, res) => {
@@ -734,9 +766,10 @@ app.post('/exams/:examId/questions/:questionId/delete', requireAdmin, async (req
   if (!exam || !question || Number(question.exam_id) !== Number(exam.id)) {
     return sendNotFound(res);
   }
+  const currentPage = parsePositivePage(req.body.page || req.query.page);
 
   deleteQuestion(question.id);
-  return redirect(res, `/exams/${exam.id}`);
+  return redirect(res, `/exams/${exam.id}?page=${currentPage}`);
 });
 
 app.get('/practice/new', async (_req, res) => {

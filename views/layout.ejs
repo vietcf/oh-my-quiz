@@ -16,18 +16,18 @@
       </div>
       <nav class="nav">
         <% if (currentUser) { %>
-          <a class="btn secondary" href="/">Trang chủ</a>
-          <a class="btn secondary" href="/practice/new">Thi thử</a>
-          <a class="btn secondary" href="/account/password">Đổi mật khẩu</a>
+          <a class="btn secondary" href="/">Trang ch&#7911;</a>
+          <a class="btn secondary" href="/practice/new">Thi th&#7917;</a>
+          <a class="btn secondary" href="/account/password">&#272;&#7893;i m&#7853;t kh&#7849;u</a>
           <% if (isAdmin) { %>
-            <a class="btn secondary" href="/exams/new">Tạo bài thi</a>
-            <a class="btn secondary" href="/admin/users">Quản lý user</a>
+            <a class="btn secondary" href="/exams/new">T&#7841;o b&#224;i thi</a>
+            <a class="btn secondary" href="/admin/users">Qu&#7843;n l&#253; user</a>
           <% } %>
           <form method="POST" action="/logout">
-            <button class="btn secondary" type="submit">Đăng xuất <%= currentUser.display_name %></button>
+            <button class="btn secondary" type="submit">&#272;&#259;ng xu&#7845;t <%= currentUser.display_name %></button>
           </form>
         <% } else { %>
-          <a class="btn secondary" href="/login">Đăng nhập</a>
+          <a class="btn secondary" href="/login">&#272;&#259;ng nh&#7853;p</a>
         <% } %>
       </nav>
     </header>

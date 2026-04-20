@@ -1,16 +1,16 @@
 <section class="panel">
   <div class="panel-head">
     <div>
-      <p class="eyebrow">Bài thi</p>
+      <p class="eyebrow">B&#224;i thi</p>
       <h1><%= exam.name %></h1>
       <p><%= exam.description || '' %></p>
     </div>
     <div class="actions">
-      <a class="btn secondary" href="/">Trang chủ</a>
-      <a class="btn" href="/practice/new">Thi thử</a>
+      <a class="btn secondary" href="/">Trang ch&#7911;</a>
+      <a class="btn" href="/practice/new">Thi th&#7917;</a>
       <% if (isAdmin) { %>
-        <form method="POST" action="/exams/<%= exam.id %>/delete" data-confirm-delete="Xóa bài thi này sẽ xóa toàn bộ câu hỏi, bài làm và kết quả liên quan. Bạn chắc chắn chứ?">
-          <button class="btn danger" type="submit">Xóa bài thi</button>
+        <form method="POST" action="/exams/<%= exam.id %>/delete" data-confirm-delete="X&#243;a b&#224;i thi n&#224;y s&#7869; x&#243;a to&#224;n b&#7897; c&#226;u h&#7887;i, b&#224;i l&#224;m v&#224; k&#7871;t qu&#7843; li&#234;n quan. B&#7841;n ch&#7855;c ch&#7855;n ch&#7913;?">
+          <button class="btn danger" type="submit">X&#243;a b&#224;i thi</button>
         </form>
       <% } %>
     </div>
@@ -21,31 +21,32 @@
   <section class="panel admin-question-toolbar" data-exam-detail-root>
     <div class="admin-question-toolbar-head">
       <div>
-        <p class="eyebrow">Quản lý câu hỏi</p>
-        <h2>Điều khiển hiển thị</h2>
+        <p class="eyebrow">Qu&#7843;n l&#253; c&#226;u h&#7887;i</p>
+        <h2>&#272;i&#7873;u khi&#7875;n hi&#7875;n th&#7883;</h2>
       </div>
       <div class="actions admin-question-toolbar-actions">
-        <button class="btn secondary" type="button" data-question-panel-toggle="list">Danh sách câu hỏi</button>
-        <button class="btn" type="button" data-question-panel-toggle="form">Thêm câu hỏi</button>
+        <button class="btn secondary" type="button" data-question-panel-toggle="list">Danh s&#225;ch c&#226;u h&#7887;i</button>
+        <button class="btn" type="button" data-question-panel-toggle="form">Th&#234;m c&#226;u h&#7887;i</button>
       </div>
     </div>
   </section>
 
   <section class="split">
     <div class="panel is-hidden" data-question-panel="form">
-      <h2>Nhập câu hỏi</h2>
+      <h2>Nh&#7853;p c&#226;u h&#7887;i</h2>
       <form method="POST" action="/exams/<%= exam.id %>/questions" class="form" data-question-form data-image-upload-root>
+        <input type="hidden" name="page" value="<%= pagination.currentPage %>" />
         <label>
-          Nội dung câu hỏi
-          <textarea name="content" rows="4" required placeholder="Nhập câu hỏi..." data-auto-grow data-image-target></textarea>
+          N&#7897;i dung c&#226;u h&#7887;i
+          <textarea name="content" rows="4" required placeholder="Nh&#7853;p c&#226;u h&#7887;i..." data-auto-grow data-image-target></textarea>
         </label>
         <div class="upload-row">
           <input type="file" accept="image/*" class="upload-input" data-image-file />
-          <button class="btn secondary" type="button" data-image-upload-btn>Upload ảnh</button>
+          <button class="btn secondary" type="button" data-image-upload-btn>Upload &#7843;nh</button>
         </div>
-        <p class="hint">Hỗ trợ ảnh bằng cú pháp <code>![alt](url)</code>. Upload xong hệ thống sẽ tự chèn link vào ô đang đặt con trỏ.</p>
+        <p class="hint">H&#7895; tr&#7907; &#7843;nh b&#7857;ng c&#250; ph&#225;p <code>![alt](url)</code>. Upload xong h&#7879; th&#7889;ng s&#7869; t&#7921; ch&#232;n link v&#224;o &#244; &#273;ang &#273;&#7863;t con tr&#7887;.</p>
         <label>
-          Loại câu hỏi
+          Lo&#7841;i c&#226;u h&#7887;i
           <select name="question_type" data-question-type>
             <option value="single">One choice</option>
             <option value="multi">Multi choice</option>
@@ -54,42 +55,46 @@
         <div id="answersGrid" class="answers-grid" data-answers-grid>
           <% [1, 2, 3, 4].forEach((n) => { %>
             <div class="answer-row" data-answer-row data-answer-index="<%= n %>">
-              <textarea name="answer_<%= n %>" rows="2" placeholder="Đáp án <%= n %>" required data-auto-grow></textarea>
+              <textarea name="answer_<%= n %>" rows="2" placeholder="&#272;&#225;p &#225;n <%= n %>" required data-auto-grow></textarea>
               <div class="correct-control" data-correct-control></div>
             </div>
           <% }) %>
         </div>
         <div class="actions">
-          <button class="btn secondary" id="addAnswerBtn" type="button" data-add-answer-btn>Thêm đáp án</button>
+          <button class="btn secondary" id="addAnswerBtn" type="button" data-add-answer-btn>Th&#234;m &#273;&#225;p &#225;n</button>
         </div>
-        <p class="hint">One choice: chọn 1 đáp án đúng. Multi choice: chọn nhiều đáp án đúng. Bạn có thể thêm hoặc xóa đáp án, nhưng mỗi câu phải còn ít nhất 2 đáp án.</p>
+        <p class="hint">One choice: ch&#7885;n 1 &#273;&#225;p &#225;n &#273;&#250;ng. Multi choice: ch&#7885;n nhi&#7873;u &#273;&#225;p &#225;n &#273;&#250;ng. B&#7841;n c&#243; th&#7875; th&#234;m ho&#7863;c x&#243;a &#273;&#225;p &#225;n, nh&#432;ng m&#7895;i c&#226;u ph&#7843;i c&#242;n &#237;t nh&#7845;t 2 &#273;&#225;p &#225;n.</p>
         <div class="actions">
-          <button class="btn" type="submit">Thêm câu hỏi</button>
+          <button class="btn" type="submit">Th&#234;m c&#226;u h&#7887;i</button>
         </div>
       </form>
     </div>
 
     <div class="panel" data-question-panel="list">
-      <h2>Danh sách câu hỏi</h2>
+      <h2>Danh s&#225;ch c&#226;u h&#7887;i</h2>
+      <% if (pagination.totalQuestions > 0) { %>
+        <p class="pagination-summary">Hi&#7875;n th&#7883; <%= pagination.startIndex + 1 %>-<%= pagination.endIndex %> tr&#234;n t&#7893;ng s&#7889; <%= pagination.totalQuestions %> c&#226;u h&#7887;i.</p>
+      <% } %>
       <div class="stack">
         <% if (questions.length) { %>
           <% questions.forEach((question, index) => { %>
             <div class="question">
               <div class="question-head">
-                <h3>Câu <%= index + 1 %></h3>
+                <h3>C&#226;u <%= pagination.startIndex + index + 1 %></h3>
                 <span class="pill"><%= question.question_type === 'multi' ? 'Multi choice' : 'One choice' %></span>
               </div>
               <div class="code-wrap"><%- question.contentBlock %></div>
               <div class="actions">
-                <a class="btn secondary" href="/exams/<%= exam.id %>/questions/<%= question.id %>/edit">Sửa câu hỏi</a>
-                <form method="POST" action="/exams/<%= exam.id %>/questions/<%= question.id %>/delete" data-confirm-delete="Xóa câu hỏi này sẽ xóa luôn các đáp án và dữ liệu làm bài liên quan. Bạn chắc chắn chứ?">
-                  <button class="btn danger" type="submit">Xóa câu hỏi</button>
+                <a class="btn secondary" href="/exams/<%= exam.id %>/questions/<%= question.id %>/edit?page=<%= pagination.currentPage %>">S&#7917;a c&#226;u h&#7887;i</a>
+                <form method="POST" action="/exams/<%= exam.id %>/questions/<%= question.id %>/delete" data-confirm-delete="X&#243;a c&#226;u h&#7887;i n&#224;y s&#7869; x&#243;a lu&#244;n c&#225;c &#273;&#225;p &#225;n v&#224; d&#7919; li&#7879;u l&#224;m b&#224;i li&#234;n quan. B&#7841;n ch&#7855;c ch&#7855;n ch&#7913;?">
+                  <input type="hidden" name="page" value="<%= pagination.currentPage %>" />
+                  <button class="btn danger" type="submit">X&#243;a c&#226;u h&#7887;i</button>
                 </form>
               </div>
               <ul class="answer-list">
                 <% question.answers.forEach((answer) => { %>
                   <li>
-                    <span class="answer-mark"><%= answer.is_correct ? '✓' : '•' %></span>
+                    <span class="answer-mark"><%- answer.is_correct ? '✓' : '•' %></span>
                     <div class="code-wrap"><%- answer.contentBlock %></div>
                   </li>
                 <% }) %>
@@ -97,17 +102,28 @@
             </div>
           <% }) %>
         <% } else { %>
-          <div class="empty">Bài thi này chưa có câu hỏi nào.</div>
+          <div class="empty">B&#224;i thi n&#224;y ch&#432;a c&#243; c&#226;u h&#7887;i n&#224;o.</div>
         <% } %>
       </div>
+      <% if (pagination.totalPages > 1) { %>
+        <div class="pagination-bar">
+          <a class="btn secondary <%= pagination.hasPrev ? '' : 'is-disabled' %>" href="<%= pagination.hasPrev ? `/exams/${exam.id}?page=${pagination.prevPage}` : '#' %>">Trang tr&#432;&#7899;c</a>
+          <div class="pagination-pages">
+            <% for (let page = 1; page <= pagination.totalPages; page += 1) { %>
+              <a class="btn secondary <%= page === pagination.currentPage ? 'is-active' : '' %>" href="/exams/<%= exam.id %>?page=<%= page %>"><%= page %></a>
+            <% } %>
+          </div>
+          <a class="btn secondary <%= pagination.hasNext ? '' : 'is-disabled' %>" href="<%= pagination.hasNext ? `/exams/${exam.id}?page=${pagination.nextPage}` : '#' %>">Trang sau</a>
+        </div>
+      <% } %>
     </div>
   </section>
 <% } else { %>
   <section class="panel">
-    <h2>Thông tin bài thi</h2>
-    <p class="muted">Bạn đang đăng nhập với vai trò user. Bạn có thể thi thử bài này nhưng không xem nội dung quản trị câu hỏi.</p>
+    <h2>Th&#244;ng tin b&#224;i thi</h2>
+    <p class="muted">B&#7841;n &#273;ang &#273;&#259;ng nh&#7853;p v&#7899;i vai tr&#242; user. B&#7841;n c&#243; th&#7875; thi th&#7917; b&#224;i n&#224;y nh&#432;ng kh&#244;ng xem n&#7897;i dung qu&#7843;n tr&#7883; c&#226;u h&#7887;i.</p>
     <div class="actions">
-      <a class="btn" href="/practice/new">Bắt đầu thi thử</a>
+      <a class="btn" href="/practice/new">B&#7855;t &#273;&#7847;u thi th&#7917;</a>
     </div>
   </section>
 <% } %>

@@ -1,29 +1,30 @@
 <section class="panel">
   <div class="panel-head">
     <div>
-      <p class="eyebrow">Sửa câu hỏi</p>
+      <p class="eyebrow">S&#7917;a c&#226;u h&#7887;i</p>
       <h1><%= exam.name %></h1>
-      <p>Cập nhật nội dung, loại câu hỏi và đáp án.</p>
+      <p>C&#7853;p nh&#7853;t n&#7897;i dung, lo&#7841;i c&#226;u h&#7887;i v&#224; &#273;&#225;p &#225;n.</p>
     </div>
     <div class="actions">
-      <a class="btn secondary" href="/exams/<%= exam.id %>">Quay lại</a>
+      <a class="btn secondary" href="/exams/<%= exam.id %>?page=<%= currentPage %>">Quay l&#7841;i</a>
     </div>
   </div>
 </section>
 
 <section class="panel">
   <form method="POST" action="/exams/<%= exam.id %>/questions/<%= question.id %>" class="form" data-question-form data-image-upload-root>
+    <input type="hidden" name="page" value="<%= currentPage %>" />
     <label>
-      Nội dung câu hỏi
-      <textarea name="content" rows="4" required placeholder="Nhập câu hỏi..." data-auto-grow data-image-target><%= question.content %></textarea>
+      N&#7897;i dung c&#226;u h&#7887;i
+      <textarea name="content" rows="4" required placeholder="Nh&#7853;p c&#226;u h&#7887;i..." data-auto-grow data-image-target><%= question.content %></textarea>
     </label>
     <div class="upload-row">
       <input type="file" accept="image/*" class="upload-input" data-image-file />
-      <button class="btn secondary" type="button" data-image-upload-btn>Upload ảnh</button>
+      <button class="btn secondary" type="button" data-image-upload-btn>Upload &#7843;nh</button>
     </div>
-    <p class="hint">Hỗ trợ ảnh bằng cú pháp <code>![alt](url)</code>. Upload xong hệ thống sẽ tự chèn link vào ô đang đặt con trỏ.</p>
+    <p class="hint">H&#7895; tr&#7907; &#7843;nh b&#7857;ng c&#250; ph&#225;p <code>![alt](url)</code>. Upload xong h&#7879; th&#7889;ng s&#7869; t&#7921; ch&#232;n link v&#224;o &#244; &#273;ang &#273;&#7863;t con tr&#7887;.</p>
     <label>
-      Loại câu hỏi
+      Lo&#7841;i c&#226;u h&#7887;i
       <select name="question_type" data-question-type>
         <option value="single" <%= question.question_type === 'single' ? 'selected' : '' %>>One choice</option>
         <option value="multi" <%= question.question_type === 'multi' ? 'selected' : '' %>>Multi choice</option>
@@ -39,22 +40,22 @@
       <% }) %>
     </div>
     <div class="actions">
-      <button class="btn secondary" id="addAnswerBtn" type="button" data-add-answer-btn>Thêm đáp án</button>
+      <button class="btn secondary" id="addAnswerBtn" type="button" data-add-answer-btn>Th&#234;m &#273;&#225;p &#225;n</button>
     </div>
-    <p class="hint">Khi sửa, bạn có thể cập nhật, thêm hoặc xóa đáp án trực tiếp. One choice chọn 1 đáp án đúng, multi choice chọn nhiều đáp án đúng, và mỗi câu phải còn ít nhất 2 đáp án.</p>
+    <p class="hint">Khi s&#7917;a, b&#7841;n c&#243; th&#7875; c&#7853;p nh&#7853;t, th&#234;m ho&#7863;c x&#243;a &#273;&#225;p &#225;n tr&#7921;c ti&#7871;p. One choice ch&#7885;n 1 &#273;&#225;p &#225;n &#273;&#250;ng, multi choice ch&#7885;n nhi&#7873;u &#273;&#225;p &#225;n &#273;&#250;ng, v&#224; m&#7895;i c&#226;u ph&#7843;i c&#242;n &#237;t nh&#7845;t 2 &#273;&#225;p &#225;n.</p>
     <div class="actions">
-      <button class="btn" type="submit">Lưu thay đổi</button>
+      <button class="btn" type="submit">L&#432;u thay &#273;&#7893;i</button>
       <button
         class="btn danger"
         type="submit"
         formaction="/exams/<%= exam.id %>/questions/<%= question.id %>/delete"
         formmethod="post"
         formnovalidate
-        data-confirm-delete="Xóa câu hỏi này sẽ xóa luôn các đáp án và dữ liệu làm bài liên quan. Bạn chắc chắn chứ?"
+        data-confirm-delete="X&#243;a c&#226;u h&#7887;i n&#224;y s&#7869; x&#243;a lu&#244;n c&#225;c &#273;&#225;p &#225;n v&#224; d&#7919; li&#7879;u l&#224;m b&#224;i li&#234;n quan. B&#7841;n ch&#7855;c ch&#7855;n ch&#7913;?"
       >
-        Xóa câu hỏi
+        X&#243;a c&#226;u h&#7887;i
       </button>
-      <a class="btn secondary" href="/exams/<%= exam.id %>">Hủy</a>
+      <a class="btn secondary" href="/exams/<%= exam.id %>?page=<%= currentPage %>">H&#7911;y</a>
     </div>
   </form>
 </section>
