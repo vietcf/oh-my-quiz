@@ -1,0 +1,90 @@
+<section class="panel">
+  <div class="panel-head">
+    <div>
+      <p class="eyebrow">Quản lý user</p>
+      <h1>Người dùng</h1>
+      <p>Tạo, sửa vai trò và xóa tài khoản trong hệ thống.</p>
+    </div>
+  </div>
+</section>
+
+<section class="split admin-split">
+  <div class="panel">
+    <h2>Thêm user</h2>
+    <form method="POST" action="/admin/users" class="form">
+      <label>
+        Username
+        <input name="username" required />
+      </label>
+      <label>
+        Tên hiển thị
+        <input name="display_name" required />
+      </label>
+      <label>
+        Mật khẩu
+        <input name="password" type="password" required />
+      </label>
+      <label>
+        Vai trò
+        <select name="role">
+          <option value="user">User</option>
+          <option value="admin">Admin</option>
+        </select>
+      </label>
+      <div class="actions">
+        <button class="btn" type="submit">Tạo user</button>
+      </div>
+    </form>
+  </div>
+
+  <div class="panel">
+    <h2>Danh sách user</h2>
+    <div class="stack">
+      <% users.forEach((user) => { %>
+        <form method="POST" action="/admin/users/<%= user.id %>" class="card user-card" data-confirm-delete="">
+          <div class="user-card-head">
+            <strong><%= user.display_name %></strong>
+            <span class="pill <%= user.role === 'admin' ? 'ok' : '' %>"><%= user.role %></span>
+          </div>
+          <div class="user-meta">@<%= user.username %></div>
+          <label>
+            Tên hiển thị
+            <input name="display_name" value="<%= user.display_name %>" required />
+          </label>
+          <label>
+            Username
+            <input name="username" value="<%= user.username %>" required />
+          </label>
+          <label>
+            Vai trò
+            <select name="role">
+              <option value="user" <%= user.role === 'user' ? 'selected' : '' %>>User</option>
+              <option value="admin" <%= user.role === 'admin' ? 'selected' : '' %>>Admin</option>
+            </select>
+          </label>
+          <label>
+            Mật khẩu mới
+            <input name="password" type="password" placeholder="Để trống nếu không đổi" />
+          </label>
+          <div class="actions">
+            <button class="btn secondary" type="submit">Lưu</button>
+            <% if (!currentUser || Number(currentUser.id) !== Number(user.id)) { %>
+              <button
+                class="btn danger"
+                type="submit"
+                formaction="/admin/users/<%= user.id %>/delete"
+                formmethod="post"
+                formnovalidate
+                data-confirm-delete="Xóa user này sẽ xóa toàn bộ session đang mở của họ. Bạn chắc chắn chứ?"
+              >
+                Xóa
+              </button>
+            <% } else { %>
+              <span class="muted">Tài khoản hiện tại</span>
+            <% } %>
+          </div>
+        </form>
+      <% }) %>
+    </div>
+  </div>
+</section>

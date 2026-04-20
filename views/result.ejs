@@ -1,0 +1,107 @@
+<section class="panel">
+  <div class="panel-head">
+    <div>
+      <p class="eyebrow">Kết quả thi</p>
+      <h1><%= attempt.exam_name %></h1>
+      <p>Điểm: <strong><%= attempt.score %>/<%= attempt.total_questions %></strong></p>
+    </div>
+    <div class="actions">
+      <a class="btn" href="/practice/new">Thi thử tiếp</a>
+      <a class="btn secondary" href="/">Trang chủ</a>
+    </div>
+  </div>
+</section>
+
+<section class="panel" data-result-root>
+  <% const wrongCount = attempt.questions.filter((question) => !question.is_correct).length; %>
+  <div class="panel-head">
+    <div>
+      <h2>Chi tiết từng câu</h2>
+      <p class="muted">Xem nhanh toàn bộ bài hoặc chỉ các câu làm sai.</p>
+    </div>
+    <div class="actions result-actions">
+      <button type="button" class="btn secondary is-active" data-result-filter="all">Tất cả</button>
+      <button type="button" class="btn secondary" data-result-filter="wrong">
+        Câu sai <span class="filter-count"><%= wrongCount %></span>
+      </button>
+    </div>
+  </div>
+  <div class="stack">
+    <% const displayText = (value) => String(value ?? ''); %>
+    <% attempt.questions.forEach((question, index) => {
+         const selected = new Set(question.selected_answer_ids || []);
+         const correct = new Set(question.correct_answer_ids || []);
+         const correctCount = Number(question.correct_choice_count || (question.correct_answer_ids || []).length || 0);
+         const selectedAnswers = (question.answers || []).filter((answer) => selected.has(answer.id));
+    %>
+      <article
+        class="question <%= question.is_correct ? 'correct' : 'wrong' %>"
+        data-result-question
+        data-is-correct="<%= question.is_correct ? '1' : '0' %>"
+      >
+        <div class="question-head">
+          <h3>Câu <%= index + 1 %></h3>
+          <span class="pill <%= question.is_correct ? 'ok' : 'bad' %>"><%= question.is_correct ? 'Đúng' : 'Sai' %></span>
+        </div>
+        <div class="code-wrap"><%- question.contentBlock %></div>
+        <p class="hint">
+          Đáp án đúng:
+          <strong><%= correctCount %></strong>
+          lựa chọn.
+          <%= question.question_type === 'multi'
+            ? 'Multi choice chỉ đúng khi chọn đủ toàn bộ đáp án đúng và không chọn thừa.'
+            : 'One choice chỉ được chọn 1 đáp án đúng.' %>
+        </p>
+        <div class="selection-summary">
+          <div class="selection-summary-title">Bạn đã chọn</div>
+          <% if (selectedAnswers.length) { %>
+            <ul class="selection-summary-list">
+              <% selectedAnswers.forEach((answer) => { %>
+                <li><%- answer.contentBlock %></li>
+              <% }) %>
+            </ul>
+          <% } else { %>
+            <div class="muted">Không chọn đáp án nào.</div>
+          <% } %>
+        </div>
+        <div class="choices review">
+          <% question.answers.forEach((answer) => {
+               const classes = ['choice'];
+               const isSelected = selected.has(answer.id);
+               const isCorrect = correct.has(answer.id);
+               let label = '';
+               let labelClass = '';
+
+               if (isSelected && isCorrect) {
+                 classes.push('selected-correct');
+                 label = 'Bạn chọn đúng';
+                 labelClass = 'ok';
+               } else if (isSelected && !isCorrect) {
+                 classes.push('selected-wrong');
+                 label = 'Bạn chọn sai';
+                 labelClass = 'bad';
+               } else if (!isSelected && isCorrect) {
+                 classes.push('correct-unselected');
+                 label = 'Đáp án đúng';
+                 labelClass = 'ok';
+               }
+          %>
+            <div class="<%= classes.join(' ') %>">
+              <div class="choice-badge-row">
+                <% if (label) { %>
+                  <span class="choice-badge <%= labelClass %>"><%= label %></span>
+                <% } %>
+              </div>
+              <div class="choice-text">
+                <div class="code-wrap"><%- answer.contentBlock %></div>
+              </div>
+            </div>
+          <% }) %>
+        </div>
+      </article>
+    <% }) %>
+  </div>
+  <div class="empty result-empty is-hidden" data-result-empty>
+    Không có câu sai trong bài này.
+  </div>
+</section>

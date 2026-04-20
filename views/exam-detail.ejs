@@ -1,0 +1,100 @@
+<section class="panel">
+  <div class="panel-head">
+    <div>
+      <p class="eyebrow">Bài thi</p>
+      <h1><%= exam.name %></h1>
+      <p><%= exam.description || '' %></p>
+    </div>
+    <div class="actions">
+      <a class="btn secondary" href="/">Trang chủ</a>
+      <a class="btn" href="/practice/new">Thi thử</a>
+      <% if (isAdmin) { %>
+        <form method="POST" action="/exams/<%= exam.id %>/delete" data-confirm-delete="Xóa bài thi này sẽ xóa toàn bộ câu hỏi, bài làm và kết quả liên quan. Bạn chắc chắn chứ?">
+          <button class="btn danger" type="submit">Xóa bài thi</button>
+        </form>
+      <% } %>
+    </div>
+  </div>
+</section>
+
+<% if (isAdmin) { %>
+  <section class="split">
+    <div class="panel">
+      <h2>Nhập câu hỏi</h2>
+      <form method="POST" action="/exams/<%= exam.id %>/questions" class="form" data-question-form data-image-upload-root>
+        <label>
+          Nội dung câu hỏi
+          <textarea name="content" rows="4" required placeholder="Nhập câu hỏi..." data-auto-grow data-image-target></textarea>
+        </label>
+        <div class="upload-row">
+          <input type="file" accept="image/*" class="upload-input" data-image-file />
+          <button class="btn secondary" type="button" data-image-upload-btn>Upload ảnh</button>
+        </div>
+        <p class="hint">Hỗ trợ ảnh bằng cú pháp <code>![alt](url)</code>. Upload xong hệ thống sẽ tự chèn link vào ô đang đặt con trỏ.</p>
+        <label>
+          Loại câu hỏi
+          <select name="question_type" data-question-type>
+            <option value="single">One choice</option>
+            <option value="multi">Multi choice</option>
+          </select>
+        </label>
+        <div id="answersGrid" class="answers-grid" data-answers-grid>
+          <% [1, 2, 3, 4].forEach((n) => { %>
+            <div class="answer-row" data-answer-row data-answer-index="<%= n %>">
+              <textarea name="answer_<%= n %>" rows="2" placeholder="Đáp án <%= n %>" required data-auto-grow></textarea>
+              <div class="correct-control" data-correct-control></div>
+            </div>
+          <% }) %>
+        </div>
+        <div class="actions">
+          <button class="btn secondary" id="addAnswerBtn" type="button" data-add-answer-btn>Thêm đáp án</button>
+        </div>
+        <p class="hint">One choice: chọn 1 đáp án đúng. Multi choice: chọn nhiều đáp án đúng. Bạn có thể thêm hoặc xóa đáp án, nhưng mỗi câu phải còn ít nhất 2 đáp án.</p>
+        <div class="actions">
+          <button class="btn" type="submit">Thêm câu hỏi</button>
+        </div>
+      </form>
+    </div>
+
+    <div class="panel">
+      <h2>Danh sách câu hỏi</h2>
+      <div class="stack">
+        <% if (questions.length) { %>
+          <% questions.forEach((question, index) => { %>
+            <div class="question">
+              <div class="question-head">
+                <h3>Câu <%= index + 1 %></h3>
+                <span class="pill"><%= question.question_type === 'multi' ? 'Multi choice' : 'One choice' %></span>
+              </div>
+              <div class="code-wrap"><%- question.contentBlock %></div>
+              <div class="actions">
+                <a class="btn secondary" href="/exams/<%= exam.id %>/questions/<%= question.id %>/edit">Sửa câu hỏi</a>
+                <form method="POST" action="/exams/<%= exam.id %>/questions/<%= question.id %>/delete" data-confirm-delete="Xóa câu hỏi này sẽ xóa luôn các đáp án và dữ liệu làm bài liên quan. Bạn chắc chắn chứ?">
+                  <button class="btn danger" type="submit">Xóa câu hỏi</button>
+                </form>
+              </div>
+              <ul class="answer-list">
+                <% question.answers.forEach((answer) => { %>
+                  <li>
+                    <span class="answer-mark"><%= answer.is_correct ? '✓' : '•' %></span>
+                    <div class="code-wrap"><%- answer.contentBlock %></div>
+                  </li>
+                <% }) %>
+              </ul>
+            </div>
+          <% }) %>
+        <% } else { %>
+          <div class="empty">Bài thi này chưa có câu hỏi nào.</div>
+        <% } %>
+      </div>
+    </div>
+  </section>
+<% } else { %>
+  <section class="panel">
+    <h2>Thông tin bài thi</h2>
+    <p class="muted">Bạn đang đăng nhập với vai trò user. Bạn có thể thi thử bài này nhưng không xem nội dung quản trị câu hỏi.</p>
+    <div class="actions">
+      <a class="btn" href="/practice/new">Bắt đầu thi thử</a>
+    </div>
+  </section>
+<% } %>

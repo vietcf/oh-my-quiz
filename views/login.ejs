@@ -1,0 +1,29 @@
+<section class="panel auth-panel">
+  <div class="panel-head">
+    <div>
+      <p class="eyebrow">Đăng nhập</p>
+      <h1>Vào hệ thống</h1>
+      <p>Admin có thể quản lý user, bài thi và câu hỏi. User thường chỉ được thi.</p>
+    </div>
+  </div>
+
+  <% if (typeof error === 'string' && error) { %>
+    <div class="empty auth-error"><%= error %></div>
+  <% } %>
+
+  <form method="POST" action="/login" class="form auth-form">
+    <input type="hidden" name="next" value="<%= nextUrl || '/' %>" />
+    <label>
+      Tên đăng nhập
+      <input name="username" autocomplete="username" required />
+    </label>
+    <label>
+      Mật khẩu
+      <input name="password" type="password" autocomplete="current-password" required />
+    </label>
+    <p class="hint">Nếu DB còn trống, hệ thống sẽ tự tạo tài khoản <code>admin</code> với mật khẩu lấy từ biến môi trường <code>ADMIN_PASSWORD</code> hoặc mặc định là <code>admin123</code>.</p>
+    <div class="actions">
+      <button class="btn" type="submit">Đăng nhập</button>
+    </div>
+  </form>
+</section>

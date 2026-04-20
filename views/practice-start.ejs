@@ -1,0 +1,26 @@
+<section class="panel">
+  <h1>Bắt đầu thi thử</h1>
+  <form method="POST" action="/practice/start" class="form">
+    <label>
+      Chọn bài thi
+      <select name="exam_id" required>
+        <option value="">-- Chọn bài thi --</option>
+        <% exams.forEach((exam) => { %>
+          <option value="<%= exam.id %>"><%= exam.name %> (<%= exam.question_count %> câu)</option>
+        <% }) %>
+      </select>
+    </label>
+    <label>
+      Thời gian thi thử (phút)
+      <input type="number" min="1" max="600" name="duration_minutes" value="15" required />
+    </label>
+    <label class="inline">
+      <input type="checkbox" name="shuffle_questions" value="1" />
+      Trộn câu hỏi
+    </label>
+    <div class="actions">
+      <button class="btn" type="submit">Vào thi thử</button>
+      <a class="btn secondary" href="/">Quay lại</a>
+    </div>
+  </form>
+</section>

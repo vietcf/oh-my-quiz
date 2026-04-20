@@ -1,0 +1,42 @@
+<section class="hero">
+  <div>
+    <p class="eyebrow">Công cụ giả lập thi trắc nghiệm</p>
+    <h1>Nhập đề, tổ chức thi thử, chấm điểm tự động.</h1>
+    <p class="lead">Dùng Node.js và SQLite, hỗ trợ nhiều bài thi, nhập câu hỏi, thời gian thi, trộn câu hỏi và tự nộp khi hết giờ.</p>
+  </div>
+  <div class="hero-actions">
+    <a class="btn" href="/exams/new">Tạo bài thi mới</a>
+    <a class="btn secondary" href="/practice/new">Bắt đầu thi thử</a>
+  </div>
+</section>
+
+<section class="grid">
+  <% if (exams.length) { %>
+    <% exams.forEach((exam) => { %>
+      <article class="card">
+        <div class="card-head">
+          <div>
+            <h3><%= exam.name %></h3>
+            <p><%= exam.description || 'Chưa có mô tả' %></p>
+          </div>
+          <span class="pill"><%= exam.question_count %> câu</span>
+        </div>
+        <div class="actions">
+          <% if (isAdmin) { %>
+            <a class="btn" href="/exams/<%= exam.id %>">Quản lý câu hỏi</a>
+            <a class="btn secondary" href="/practice/new">Thi thử</a>
+          <% } else { %>
+            <a class="btn" href="/practice/new">Thi thử</a>
+          <% } %>
+          <% if (isAdmin) { %>
+            <form method="POST" action="/exams/<%= exam.id %>/delete" data-confirm-delete="Xóa bài thi này sẽ xóa toàn bộ câu hỏi, bài làm và kết quả liên quan. Bạn chắc chắn chứ?">
+              <button class="btn danger" type="submit">Xóa bài thi</button>
+            </form>
+          <% } %>
+        </div>
+      </article>
+    <% }) %>
+  <% } else { %>
+    <div class="empty">Chưa có bài thi nào. Hãy tạo bài thi đầu tiên.</div>
+  <% } %>
+</section>

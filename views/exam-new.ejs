@@ -1,0 +1,17 @@
+<section class="panel">
+  <h1>Tạo bài thi</h1>
+  <form method="POST" action="/exams" class="form">
+    <label>
+      Tên bài thi
+      <input name="name" placeholder="Ví dụ: Lập trình Node.js" required />
+    </label>
+    <label>
+      Mô tả
+      <textarea name="description" rows="4" placeholder="Mô tả ngắn về đề thi"></textarea>
+    </label>
+    <div class="actions">
+      <button class="btn" type="submit">Lưu bài thi</button>
+      <a class="btn secondary" href="/">Quay lại</a>
+    </div>
+  </form>
+</section>

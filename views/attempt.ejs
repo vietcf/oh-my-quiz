@@ -1,0 +1,68 @@
+<section class="panel">
+  <div class="panel-head">
+    <div>
+      <p class="eyebrow">Đang thi thử</p>
+      <h1><%= attempt.exam_name %></h1>
+      <p><%= attempt.exam_description || '' %></p>
+    </div>
+    <div class="timer-box">
+      <div class="timer-label">Thời gian còn lại</div>
+      <div id="timer" class="timer"><%= Math.floor(timerSeconds / 60).toString().padStart(2, '0') %>:<%= (timerSeconds % 60).toString().padStart(2, '0') %></div>
+      <div class="muted">Tự nộp khi hết giờ</div>
+    </div>
+  </div>
+</section>
+
+<section class="split" data-attempt-root data-attempt-id="<%= attempt.id %>" data-remaining-seconds="<%= timerSeconds %>">
+  <div class="panel">
+    <h2>Đề thi</h2>
+    <form id="attemptForm" method="POST" action="/attempt/<%= attempt.id %>/submit" class="stack">
+      <% const displayText = (value) => String(value ?? ''); %>
+      <% questions.forEach((question, index) => { 
+           const selected = answersMap.get(question.id) || [];
+      %>
+        <article class="question attempt-question" data-question-id="<%= question.id %>" data-question-type="<%= question.question_type %>">
+          <div class="question-head">
+            <h3>Câu <%= index + 1 %></h3>
+            <span class="pill"><%= question.question_type === 'multi' ? 'Multi choice' : 'One choice' %></span>
+          </div>
+          <p class="hint"><%= question.question_type === 'multi' ? 'Chọn tất cả đáp án đúng của câu này.' : 'Chỉ chọn 1 đáp án đúng.' %></p>
+          <div class="code-wrap"><%- question.contentBlock %></div>
+          <div class="choices">
+            <% question.answers.forEach((answer) => { %>
+              <label class="choice">
+                <input
+                  type="checkbox"
+                  name="q_<%= question.id %>"
+                  value="<%= answer.id %>"
+                  <%= selected.includes(answer.id) ? 'checked' : '' %>
+                />
+                <div class="choice-text">
+                  <div class="code-wrap"><%- answer.contentBlock %></div>
+                </div>
+              </label>
+            <% }) %>
+          </div>
+        </article>
+      <% }) %>
+      <div class="actions sticky-actions">
+        <button class="btn" type="submit">Nộp bài</button>
+        <a class="btn secondary" href="/">Thoát</a>
+      </div>
+    </form>
+  </div>
+
+  <aside class="panel sidebar">
+    <h2>Kết quả chọn</h2>
+    <div id="sidebarList" class="stack">
+      <% questions.forEach((question, index) => { 
+           const selected = answersMap.get(question.id) || [];
+      %>
+        <button type="button" class="sidebar-item" data-summary="<%= question.id %>">
+          <strong>Câu <%= index + 1 %></strong>
+          <span><%= selected.length ? `${selected.length} lựa chọn` : 'Chưa chọn' %></span>
+        </button>
+      <% }) %>
+    </div>
+  </aside>
+</section>

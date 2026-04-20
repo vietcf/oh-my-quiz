@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title><%= title || 'Quiz Simulator' %></title>
+  <link rel="stylesheet" href="/styles.css" />
+  <script defer src="/app.js"></script>
+</head>
+<body>
+  <div class="container">
+    <header class="topbar">
+      <div class="brand">
+        <strong>Quiz Simulator</strong>
+        <span>Node.js + SQLite</span>
+      </div>
+      <nav class="nav">
+        <% if (currentUser) { %>
+          <a class="btn secondary" href="/">Trang chủ</a>
+          <a class="btn secondary" href="/practice/new">Thi thử</a>
+          <a class="btn secondary" href="/account/password">Đổi mật khẩu</a>
+          <% if (isAdmin) { %>
+            <a class="btn secondary" href="/exams/new">Tạo bài thi</a>
+            <a class="btn secondary" href="/admin/users">Quản lý user</a>
+          <% } %>
+          <form method="POST" action="/logout">
+            <button class="btn secondary" type="submit">Đăng xuất <%= currentUser.display_name %></button>
+          </form>
+        <% } else { %>
+          <a class="btn secondary" href="/login">Đăng nhập</a>
+        <% } %>
+      </nav>
+    </header>
+
+    <main>
+      <%- body %>
+    </main>
+  </div>
+</body>
+</html>

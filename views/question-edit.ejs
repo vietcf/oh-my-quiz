@@ -1,0 +1,60 @@
+<section class="panel">
+  <div class="panel-head">
+    <div>
+      <p class="eyebrow">Sửa câu hỏi</p>
+      <h1><%= exam.name %></h1>
+      <p>Cập nhật nội dung, loại câu hỏi và đáp án.</p>
+    </div>
+    <div class="actions">
+      <a class="btn secondary" href="/exams/<%= exam.id %>">Quay lại</a>
+    </div>
+  </div>
+</section>
+
+<section class="panel">
+  <form method="POST" action="/exams/<%= exam.id %>/questions/<%= question.id %>" class="form" data-question-form data-image-upload-root>
+    <label>
+      Nội dung câu hỏi
+      <textarea name="content" rows="4" required placeholder="Nhập câu hỏi..." data-auto-grow data-image-target><%= question.content %></textarea>
+    </label>
+    <div class="upload-row">
+      <input type="file" accept="image/*" class="upload-input" data-image-file />
+      <button class="btn secondary" type="button" data-image-upload-btn>Upload ảnh</button>
+    </div>
+    <p class="hint">Hỗ trợ ảnh bằng cú pháp <code>![alt](url)</code>. Upload xong hệ thống sẽ tự chèn link vào ô đang đặt con trỏ.</p>
+    <label>
+      Loại câu hỏi
+      <select name="question_type" data-question-type>
+        <option value="single" <%= question.question_type === 'single' ? 'selected' : '' %>>One choice</option>
+        <option value="multi" <%= question.question_type === 'multi' ? 'selected' : '' %>>Multi choice</option>
+      </select>
+    </label>
+    <div id="answersGrid" class="answers-grid" data-answers-grid>
+      <% question.answers.forEach((answer, index) => { %>
+        <div class="answer-row" data-answer-row data-answer-index="<%= index + 1 %>" data-is-correct="<%= answer.is_correct ? '1' : '0' %>">
+          <input type="hidden" name="answer_id_<%= index + 1 %>" value="<%= answer.id %>" />
+          <textarea name="answer_<%= index + 1 %>" rows="2" required data-auto-grow><%= answer.content %></textarea>
+          <div class="correct-control" data-correct-control></div>
+        </div>
+      <% }) %>
+    </div>
+    <div class="actions">
+      <button class="btn secondary" id="addAnswerBtn" type="button" data-add-answer-btn>Thêm đáp án</button>
+    </div>
+    <p class="hint">Khi sửa, bạn có thể cập nhật, thêm hoặc xóa đáp án trực tiếp. One choice chọn 1 đáp án đúng, multi choice chọn nhiều đáp án đúng, và mỗi câu phải còn ít nhất 2 đáp án.</p>
+    <div class="actions">
+      <button class="btn" type="submit">Lưu thay đổi</button>
+      <button
+        class="btn danger"
+        type="submit"
+        formaction="/exams/<%= exam.id %>/questions/<%= question.id %>/delete"
+        formmethod="post"
+        formnovalidate
+        data-confirm-delete="Xóa câu hỏi này sẽ xóa luôn các đáp án và dữ liệu làm bài liên quan. Bạn chắc chắn chứ?"
+      >
+        Xóa câu hỏi
+      </button>
+      <a class="btn secondary" href="/exams/<%= exam.id %>">Hủy</a>
+    </div>
+  </form>
+</section>
