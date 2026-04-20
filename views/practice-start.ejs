@@ -14,9 +14,14 @@
       Thời gian thi thử (phút)
       <input type="number" min="1" max="600" name="duration_minutes" value="15" required />
     </label>
-    <label class="inline">
-      <input type="checkbox" name="shuffle_questions" value="1" />
-      Trộn câu hỏi
+    <label class="toggle-card">
+      <span class="toggle-card-input">
+        <input type="checkbox" name="shuffle_questions" value="1" />
+      </span>
+      <span class="toggle-card-copy">
+        <strong>Trộn câu hỏi</strong>
+        <span class="muted">Bật tùy chọn này nếu bạn muốn đảo thứ tự câu hỏi mỗi lần vào thi thử.</span>
+      </span>
     </label>
     <div class="actions">
       <button class="btn" type="submit">Vào thi thử</button>
