@@ -4,15 +4,21 @@
       <p class="eyebrow">Kết quả thi</p>
       <h1><%= attempt.exam_name %></h1>
       <p>Điểm: <strong><%= attempt.score %>/<%= attempt.total_questions %></strong></p>
+      <p>
+        Nộp bài lúc:
+        <strong><%= attempt.submitted_at ? new Date(String(attempt.submitted_at).replace(' ', 'T') + 'Z').toLocaleString('vi-VN') : 'Chưa nộp' %></strong>
+      </p>
     </div>
     <div class="actions">
       <a class="btn" href="/practice/new">Thi thử tiếp</a>
+      <a class="btn secondary" href="/attempts/history">Lịch sử thi</a>
+      <a class="btn secondary" href="/attempt/<%= attempt.id %>/result?filter=wrong">Xem câu sai</a>
       <a class="btn secondary" href="/">Trang chủ</a>
     </div>
   </div>
 </section>
 
-<section class="panel" data-result-root>
+<section class="panel" data-result-root data-default-filter="<%= activeFilter === 'wrong' ? 'wrong' : 'all' %>">
   <% const wrongCount = attempt.questions.filter((question) => !question.is_correct).length; %>
   <div class="panel-head">
     <div>

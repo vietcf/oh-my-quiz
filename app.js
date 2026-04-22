@@ -24,6 +24,7 @@ import {
   getExam,
   getQuestionForEdit,
   getSessionByToken,
+  listAttemptHistory,
   listUsers,
   listExams,
   listQuestionsForExam,
@@ -438,6 +439,10 @@ function canAccessAttempt(attempt, user) {
   return attempt.user_id == null ? false : Number(attempt.user_id) === Number(user.id);
 }
 
+function normalizeResultFilter(value) {
+  return String(value || '').trim().toLowerCase() === 'wrong' ? 'wrong' : 'all';
+}
+
 async function renderChangePasswordPage(res, overrides = {}) {
   await render(res, 'change-password.ejs', {
     title: 'Đổi mật khẩu',
@@ -822,6 +827,18 @@ app.post('/practice/start', async (req, res) => {
   return redirect(res, `/attempt/${attempt.id}`);
 });
 
+app.get('/attempts/history', requireAuth, async (req, res) => {
+  const currentUser = res.locals.currentUser;
+  const attempts = currentUser.role === 'admin'
+    ? listAttemptHistory()
+    : listAttemptHistory(currentUser.id);
+
+  await render(res, 'attempt-history.ejs', {
+    title: 'Lịch sử thi',
+    attempts,
+  });
+});
+
 app.get('/attempt/:id', async (req, res) => {
   const attempt = getAttemptWithExam(Number(req.params.id));
   if (!attempt) return sendNotFound(res);
@@ -930,6 +947,7 @@ app.get('/attempt/:id/result', async (req, res) => {
   await render(res, 'result.ejs', {
     title: 'Kết quả thi',
     attempt: decorateAttempt(scored),
+    activeFilter: normalizeResultFilter(req.query.filter),
   });
 });
 

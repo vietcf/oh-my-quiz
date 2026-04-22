@@ -1,0 +1,73 @@
+<section class="panel">
+  <div class="panel-head">
+    <div>
+      <p class="eyebrow">Lịch sử thi</p>
+      <h1><%= isAdmin ? 'Toàn bộ lịch sử làm bài' : 'Lịch sử thi của bạn' %></h1>
+      <p>
+        <%= isAdmin
+          ? 'Admin có thể xem mọi lượt thi và mở lại chi tiết kết quả của từng người dùng.'
+          : 'Xem thời gian thi, số câu đúng sai và mở lại những câu bạn làm sai.' %>
+      </p>
+    </div>
+    <div class="actions">
+      <a class="btn" href="/practice/new">Thi thử</a>
+      <a class="btn secondary" href="/">Trang chủ</a>
+    </div>
+  </div>
+</section>
+
+<section class="stack">
+  <% if (attempts.length) { %>
+    <% attempts.forEach((attempt) => { %>
+      <article class="card attempt-history-card">
+        <div class="card-head">
+          <div>
+            <h3><%= attempt.exam_name %></h3>
+            <p class="attempt-history-meta">
+              Thi lúc <strong><%= attempt.started_at ? new Date(String(attempt.started_at).replace(' ', 'T') + 'Z').toLocaleString('vi-VN') : '-' %></strong>
+            </p>
+            <p class="attempt-history-meta">
+              Nộp lúc <strong><%= attempt.submitted_at ? new Date(String(attempt.submitted_at).replace(' ', 'T') + 'Z').toLocaleString('vi-VN') : '-' %></strong>
+              <% if (attempt.auto_submitted) { %>
+                <span class="pill bad">Tự nộp</span>
+              <% } %>
+            </p>
+            <% if (isAdmin) { %>
+              <p class="attempt-history-meta">
+                Người làm: <strong><%= attempt.display_name || attempt.username || 'Không rõ' %></strong>
+              </p>
+            <% } %>
+          </div>
+          <div class="attempt-history-score">
+            <span class="pill ok">Đúng <%= attempt.correct_count %></span>
+            <span class="pill bad">Sai <%= attempt.wrong_count %></span>
+            <span class="pill"><%= attempt.duration_minutes %> phút</span>
+            <span class="pill"><%= attempt.total_questions %> câu</span>
+          </div>
+        </div>
+        <div class="attempt-history-summary">
+          <div class="attempt-history-summary-item">
+            <span class="muted">Điểm</span>
+            <strong><%= attempt.score %>/<%= attempt.total_questions %></strong>
+          </div>
+          <div class="attempt-history-summary-item">
+            <span class="muted">Trộn câu hỏi</span>
+            <strong><%= attempt.shuffle_questions ? 'Có' : 'Không' %></strong>
+          </div>
+          <div class="attempt-history-summary-item">
+            <span class="muted">Tiêu đề lượt thi</span>
+            <strong><%= attempt.title %></strong>
+          </div>
+        </div>
+        <div class="actions attempt-history-actions">
+          <a class="btn secondary" href="/attempt/<%= attempt.id %>/result">Xem toàn bộ kết quả</a>
+          <a class="btn" href="/attempt/<%= attempt.id %>/result?filter=wrong">Xem câu sai</a>
+        </div>
+      </article>
+    <% }) %>
+  <% } else { %>
+    <section class="panel empty-state-panel">
+      <div class="empty">Chưa có lượt thi nào đã nộp.</div>
+    </section>
+  <% } %>
+</section>

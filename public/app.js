@@ -425,6 +425,7 @@ function setupResultPage() {
   const root = document.querySelector('[data-result-root]');
   if (!root) return;
 
+  const defaultFilter = root.dataset.defaultFilter === 'wrong' ? 'wrong' : 'all';
   const filterButtons = root.querySelectorAll('[data-result-filter]');
   const questions = root.querySelectorAll('[data-result-question]');
   const emptyState = root.querySelector('[data-result-empty]');
@@ -453,5 +454,5 @@ function setupResultPage() {
     });
   });
 
-  applyFilter('all');
+  applyFilter(defaultFilter);
 }

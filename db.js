@@ -258,6 +258,22 @@ const statements = {
     JOIN exams e ON e.id = a.exam_id
     WHERE a.id = ?
   `),
+  listAttemptHistoryAll: db.prepare(`
+    SELECT a.*, e.name AS exam_name, u.username, u.display_name
+    FROM attempts a
+    JOIN exams e ON e.id = a.exam_id
+    LEFT JOIN users u ON u.id = a.user_id
+    WHERE a.submitted_at IS NOT NULL
+    ORDER BY a.submitted_at DESC, a.id DESC
+  `),
+  listAttemptHistoryByUser: db.prepare(`
+    SELECT a.*, e.name AS exam_name, u.username, u.display_name
+    FROM attempts a
+    JOIN exams e ON e.id = a.exam_id
+    LEFT JOIN users u ON u.id = a.user_id
+    WHERE a.submitted_at IS NOT NULL AND a.user_id = ?
+    ORDER BY a.submitted_at DESC, a.id DESC
+  `),
   upsertAttemptAnswer: db.prepare(`
     INSERT INTO attempt_answers (attempt_id, question_id, selected_answer_ids_json)
     VALUES (?, ?, ?)
@@ -324,6 +340,30 @@ function normalizeQuestion(row) {
       content: answer.content,
       is_correct: Number(answer.is_correct) === 1,
     })),
+  };
+}
+
+function normalizeAttemptHistoryRow(row) {
+  const totalQuestions = Number(row.total_questions) || 0;
+  const correctCount = Number(row.score) || 0;
+  return {
+    id: row.id,
+    exam_id: row.exam_id,
+    exam_name: row.exam_name,
+    user_id: row.user_id,
+    username: row.username || '',
+    display_name: row.display_name || '',
+    title: row.title,
+    duration_minutes: row.duration_minutes,
+    shuffle_questions: Number(row.shuffle_questions) === 1,
+    started_at: row.started_at,
+    ended_at: row.ended_at,
+    submitted_at: row.submitted_at,
+    auto_submitted: Number(row.auto_submitted) === 1,
+    score: correctCount,
+    total_questions: totalQuestions,
+    correct_count: correctCount,
+    wrong_count: Math.max(0, totalQuestions - correctCount),
   };
 }
 
@@ -529,6 +569,13 @@ export function getAttempt(id) {
 
 export function getAttemptWithExam(id) {
   return statements.getAttemptWithExam.get(id);
+}
+
+export function listAttemptHistory(userId = null) {
+  if (userId == null) {
+    return statements.listAttemptHistoryAll.all().map(normalizeAttemptHistoryRow);
+  }
+  return statements.listAttemptHistoryByUser.all(userId).map(normalizeAttemptHistoryRow);
 }
 
 export function loadAttemptQuestions(attempt) {

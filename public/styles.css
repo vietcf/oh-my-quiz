@@ -670,6 +670,53 @@ a { color: inherit; text-decoration: none; }
   color: #04111f;
 }
 
+.attempt-history-card {
+  display: grid;
+  gap: 16px;
+}
+
+.attempt-history-meta {
+  margin: 6px 0 0;
+}
+
+.attempt-history-score {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: flex-end;
+}
+
+.attempt-history-summary {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 12px;
+}
+
+.attempt-history-summary-item {
+  display: grid;
+  gap: 6px;
+  padding: 14px 16px;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  background: rgba(15, 23, 42, 0.64);
+}
+
+.attempt-history-summary-item strong {
+  overflow-wrap: anywhere;
+}
+
+.attempt-history-actions {
+  align-items: stretch;
+}
+
+.attempt-history-actions > .btn {
+  flex: 1 1 220px;
+}
+
+.empty-state-panel {
+  text-align: center;
+}
+
 .filter-count {
   display: inline-flex;
   align-items: center;
