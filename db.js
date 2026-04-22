@@ -281,7 +281,9 @@ const statements = {
   `),
 };
 
-seedDemoData();
+if (process.env.SKIP_DEMO_SEED !== '1') {
+  seedDemoData();
+}
 seedDefaultAdmin();
 
 function seedDemoData() {
@@ -289,13 +291,13 @@ function seedDemoData() {
   if (count > 0) return;
 
   const examId = statements.createExam.run('Lập trình cơ bản', 'Đề mẫu để bắt đầu nhanh').lastInsertRowid;
-  const q1 = statements.createQuestion.run(examId, 'Node.js là gì?', 'single').lastInsertRowid;
+  const q1 = statements.createQuestion.run(examId, 'Node.js là gì?', '', 'single').lastInsertRowid;
   statements.createAnswer.run(q1, 'Môi trường chạy JavaScript phía server', 1);
   statements.createAnswer.run(q1, 'Một trình duyệt web', 0);
   statements.createAnswer.run(q1, 'Một cơ sở dữ liệu', 0);
   statements.createAnswer.run(q1, 'Một hệ điều hành', 0);
 
-  const q2 = statements.createQuestion.run(examId, 'Chọn các đặc điểm đúng của SQLite', 'multi').lastInsertRowid;
+  const q2 = statements.createQuestion.run(examId, 'Chọn các đặc điểm đúng của SQLite', '', 'multi').lastInsertRowid;
   statements.createAnswer.run(q2, 'Nhẹ và nhúng trực tiếp', 1);
   statements.createAnswer.run(q2, 'Cần server riêng để chạy', 0);
   statements.createAnswer.run(q2, 'Lưu dữ liệu vào file', 1);

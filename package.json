@@ -5,7 +5,8 @@
   "type": "module",
   "main": "app.js",
   "scripts": {
-    "start": "node app.js"
+    "start": "node app.js",
+    "import:mhtml": "node scripts/import-mhtml.js"
   },
   "dependencies": {
     "ejs": "^5.0.2",
