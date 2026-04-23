@@ -237,6 +237,7 @@ function decorateQuestion(question) {
   return {
     ...question,
     contentBlock: renderRichContent(question.content),
+    overallExplanationBlock: renderRichContent(question.overall_explanation),
     answers: question.answers.map((answer) => ({
       ...answer,
       contentBlock: renderRichContent(answer.content),
@@ -667,6 +668,7 @@ app.post('/exams/:id/questions', requireAdmin, async (req, res) => {
   const examPageUrl = `/exams/${exam.id}?page=${currentPage}`;
 
   const content = String(req.body.content || '').trim();
+  const overallExplanation = String(req.body.overall_explanation || '').trim();
   const questionType = req.body.question_type === 'multi' ? 'multi' : 'single';
   const answers = normalizeAnswers(req.body);
 
@@ -711,7 +713,7 @@ app.post('/exams/:id/questions', requireAdmin, async (req, res) => {
     });
   }
 
-  createQuestion(exam.id, content, questionType, answers);
+  createQuestion(exam.id, content, overallExplanation, questionType, answers);
   return redirect(res, examPageUrl);
 });
 
@@ -726,6 +728,7 @@ app.post('/exams/:examId/questions/:questionId', requireAdmin, async (req, res) 
   const editPageUrl = `/exams/${exam.id}/questions/${question.id}/edit?page=${currentPage}`;
 
   const content = String(req.body.content || '').trim();
+  const overallExplanation = String(req.body.overall_explanation || '').trim();
   const questionType = req.body.question_type === 'multi' ? 'multi' : 'single';
   const answers = normalizeAnswersWithIds(req.body);
 
@@ -770,7 +773,7 @@ app.post('/exams/:examId/questions/:questionId', requireAdmin, async (req, res) 
     });
   }
 
-  updateQuestion(question.id, exam.id, content, questionType, answers);
+  updateQuestion(question.id, exam.id, content, overallExplanation, questionType, answers);
   return redirect(res, examPageUrl);
 });
 

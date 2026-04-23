@@ -43,6 +43,11 @@
       <button class="btn secondary" id="addAnswerBtn" type="button" data-add-answer-btn>Th&#234;m &#273;&#225;p &#225;n</button>
     </div>
     <p class="hint">Khi s&#7917;a, b&#7841;n c&#243; th&#7875; c&#7853;p nh&#7853;t, th&#234;m ho&#7863;c x&#243;a &#273;&#225;p &#225;n tr&#7921;c ti&#7871;p. One choice ch&#7885;n 1 &#273;&#225;p &#225;n &#273;&#250;ng, multi choice ch&#7885;n nhi&#7873;u &#273;&#225;p &#225;n &#273;&#250;ng, v&#224; m&#7895;i c&#226;u ph&#7843;i c&#242;n &#237;t nh&#7845;t 2 &#273;&#225;p &#225;n.</p>
+    <label>
+      Overall explanation (t&#249;y ch&#7885;n)
+      <textarea name="overall_explanation" rows="5" placeholder="Gi&#7843;i th&#237;ch v&#236; sao ch&#7885;n &#273;&#225;p &#225;n n&#224;y, ho&#7863;c c&#225;c l&#432;u &#253; quan tr&#7885;ng khi l&#224;m c&#226;u h&#7887;i..." data-auto-grow><%= question.overall_explanation || '' %></textarea>
+    </label>
+    <p class="hint">Ph&#7847;n n&#224;y s&#7869; hi&#7875;n th&#7883; tr&#234;n trang k&#7871;t qu&#7843; khi ng&#432;&#7901;i d&#249;ng b&#7845;m <code>Overall explanation</code>. C&#243; th&#7875; b&#7887; tr&#7889;ng.</p>
     <div class="actions">
       <button class="btn" type="submit">L&#432;u thay &#273;&#7893;i</button>
       <button

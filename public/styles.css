@@ -819,6 +819,34 @@ a { color: inherit; text-decoration: none; }
   box-shadow: inset 0 0 0 1px rgba(56, 189, 248, 0.08);
 }
 
+.overall-explanation {
+  margin-top: 14px;
+}
+
+.overall-explanation-toggle {
+  list-style: none;
+}
+
+.overall-explanation-toggle::-webkit-details-marker {
+  display: none;
+}
+
+.overall-explanation[open] .overall-explanation-toggle {
+  margin-bottom: 12px;
+}
+
+.overall-explanation-content {
+  padding: 12px 14px;
+  border: 1px solid rgba(148, 163, 184, 0.24);
+  border-radius: 16px;
+  background: rgba(8, 17, 31, 0.88);
+  box-shadow: inset 0 0 0 1px rgba(148, 163, 184, 0.06);
+}
+
+.overall-explanation-content .rich-content {
+  gap: 12px;
+}
+
 .selection-summary-title {
   display: inline-flex;
   align-items: center;

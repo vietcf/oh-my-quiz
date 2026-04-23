@@ -33,6 +33,7 @@
          const correct = new Set(question.correct_answer_ids || []);
          const correctCount = Number(question.correct_choice_count || (question.correct_answer_ids || []).length || 0);
          const selectedAnswers = (question.answers || []).filter((answer) => selected.has(answer.id));
+         const overallExplanation = String(question.overall_explanation || '').trim();
     %>
       <article
         class="question <%= question.is_correct ? 'correct' : 'wrong' %>"
@@ -98,6 +99,14 @@
             </div>
           <% }) %>
         </div>
+        <% if (overallExplanation) { %>
+          <details class="overall-explanation">
+            <summary class="btn info overall-explanation-toggle">Overall explanation</summary>
+            <div class="overall-explanation-content">
+              <%- renderRichContent(overallExplanation) %>
+            </div>
+          </details>
+        <% } %>
       </article>
     <% }) %>
   </div>

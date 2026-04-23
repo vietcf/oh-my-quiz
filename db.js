@@ -31,6 +31,7 @@ db.exec(`
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     exam_id INTEGER NOT NULL,
     content TEXT NOT NULL,
+    overall_explanation TEXT NOT NULL DEFAULT '',
     question_type TEXT NOT NULL CHECK(question_type IN ('single', 'multi')),
     created_at TEXT NOT NULL DEFAULT (datetime('now')),
     FOREIGN KEY (exam_id) REFERENCES exams(id) ON DELETE CASCADE
@@ -94,6 +95,7 @@ db.exec(`
 `);
 
 ensureColumnExists('attempts', 'user_id', 'INTEGER');
+ensureColumnExists('questions', 'overall_explanation', "TEXT NOT NULL DEFAULT ''");
 
 function ensureColumnExists(tableName, columnName, definition) {
   const columns = db.prepare(`PRAGMA table_info(${tableName})`).all().map((row) => row.name);
@@ -226,7 +228,7 @@ const statements = {
     WHERE q.exam_id = ?
     ORDER BY q.id ASC
   `),
-  createQuestion: db.prepare(`INSERT INTO questions (exam_id, content, question_type) VALUES (?, ?, ?)`),
+  createQuestion: db.prepare(`INSERT INTO questions (exam_id, content, overall_explanation, question_type) VALUES (?, ?, ?, ?)`),
   createAnswer: db.prepare(`INSERT INTO answers (question_id, content, is_correct) VALUES (?, ?, ?)`),
   deleteQuestion: db.prepare(`DELETE FROM questions WHERE id = ?`),
   getQuestionBank: db.prepare(`
@@ -313,6 +315,7 @@ function normalizeQuestion(row) {
     id: row.id,
     exam_id: row.exam_id,
     content: row.content,
+    overall_explanation: row.overall_explanation || '',
     question_type: row.question_type,
     answers: answers.map((answer) => ({
       id: answer.id,
@@ -423,10 +426,10 @@ export function getQuestionForEdit(questionId) {
   return row ? normalizeQuestion(row) : null;
 }
 
-export function createQuestion(examId, content, questionType, answers) {
+export function createQuestion(examId, content, overallExplanation, questionType, answers) {
   db.exec('BEGIN');
   try {
-    const questionInfo = statements.createQuestion.run(examId, content, questionType);
+    const questionInfo = statements.createQuestion.run(examId, content, overallExplanation, questionType);
     const questionId = Number(questionInfo.lastInsertRowid);
     for (const answer of answers) {
       statements.createAnswer.run(questionId, answer.content, answer.is_correct ? 1 : 0);
@@ -443,14 +446,14 @@ export function deleteQuestion(questionId) {
   return statements.deleteQuestion.run(questionId);
 }
 
-export function updateQuestion(questionId, examId, content, questionType, answers) {
+export function updateQuestion(questionId, examId, content, overallExplanation, questionType, answers) {
   db.exec('BEGIN');
   try {
     const questionInfo = db.prepare(`
       UPDATE questions
-      SET content = ?, question_type = ?
+      SET content = ?, overall_explanation = ?, question_type = ?
       WHERE id = ? AND exam_id = ?
-    `).run(content, questionType, questionId, examId);
+    `).run(content, overallExplanation, questionType, questionId, examId);
 
     if (questionInfo.changes === 0) {
       throw new Error('Question not found');
